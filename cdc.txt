@@ -1,0 +1,13 @@
+SELECT a.UPC,a.competitorName,a.CityNameCN,a.YEAR,a.week, a.CompType 
+
+FROM (SELECT t1.UPC,t1.competitorName,t1.CityNameCN,t1.YEAR,t1.week,
+				CASE
+	              WHEN t1.ShelfPrice > t1.CompPrice THEN 'Higher'
+	              WHEN t1.ShelfPrice = t1.CompPrice THEN 'Same'
+	           	ELSE 'Lower'
+          		END AS CompType
+		 	  FROM t_r_UpcSumData AS t1)  AS a 
+			  
+WHERE a.YEAR = 2018 AND a.week BETWEEN 9 AND 13 AND a.compType = 'Higher'
+GROUP BY a.CityNameCN,a.competitorName,a.UPC,a.YEAR,a.week,a.comptype
+HAVING(COUNT(a.upc)>=2)
